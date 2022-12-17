@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodo, removeTodo } from "./redux/action/action";
+import './css/app.css'
+
 
 function App() {
+
+
+  const [counter, setCounter] = useState(0)
+  const [todo, setTodo] = useState('')
+  const todos = useSelector(state => state.todos)
+  const dispatch = useDispatch()
+
+  const todoSubmitHandler = () => {
+    if(todo !== ""){
+      dispatch(addTodo(counter, todo))
+      setCounter(counter +1)
+      setTodo("")
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+        
+          <h2 className="todo">todo</h2>
+            <input className="input" type="text" value={todo} onChange={e => setTodo(e.target.value)}/>
+            <button className="btn" onClick={todoSubmitHandler}>Добавить</button>
+          <div className="list">
+            <ul>{
+                todos?.map((todo) => (
+                <li className="todolist" key={todo.id}>
+                {todo.task}
+                <button className="btn2" onClick={() => dispatch(removeTodo(todo.id))}>Выполнено</button>
+                </li>
+                  ))
+                }
+            </ul>
+          </div>
+      </div>
     </div>
   );
 }
